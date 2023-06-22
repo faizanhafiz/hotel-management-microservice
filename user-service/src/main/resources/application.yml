@@ -1,0 +1,25 @@
+
+
+server:
+  port: 8080
+
+
+
+spring:
+  application:
+    name: user-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/microserice
+    username: root
+    password: root
+    driver-class-name:  com.mysql.jdbc.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+    show-sql: true
+
+
