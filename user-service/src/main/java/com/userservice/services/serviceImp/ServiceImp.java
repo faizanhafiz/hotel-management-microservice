@@ -5,9 +5,12 @@ import com.userservice.exceptions.UserNotFoundException;
 import com.userservice.repositories.UserREpository;
 import com.userservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Service
 public class ServiceImp implements UserService {
 
 

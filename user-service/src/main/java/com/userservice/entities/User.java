@@ -1,11 +1,14 @@
 package com.userservice.entities;
 
 
+import com.userservice.entities.Rating.Rating;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -31,6 +34,13 @@ public class User {
 
     @Column(name = "about")
     private String about;
+
+
+
+    @Transient
+    List<Rating> ratings  = new ArrayList<>();
+
+
 
 
 
