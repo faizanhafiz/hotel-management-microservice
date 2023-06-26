@@ -5,13 +5,16 @@ import com.userservice.dto.ResponseApi.ResponseApi;
 import org.hibernate.annotations.NotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.swing.text.html.parser.Entity;
 
-@ResponseStatus
+@RestControllerAdvice
 public class GlobalException {
 
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ResponseApi>  globalUserNOtFoundException(UserNotFoundException ex)
     {
 

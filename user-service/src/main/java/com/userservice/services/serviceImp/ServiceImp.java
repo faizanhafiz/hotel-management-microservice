@@ -1,5 +1,6 @@
 package com.userservice.services.serviceImp;
 
+import com.userservice.dto.ResponseApi.UserRequest;
 import com.userservice.entities.User;
 import com.userservice.exceptions.UserNotFoundException;
 import com.userservice.repositories.UserREpository;
@@ -17,8 +18,16 @@ public class ServiceImp implements UserService {
     @Autowired
     private UserREpository  userREpository;
     @Override
-    public User saveUser(User user) {
-       return userREpository.save(user);
+    public User saveUser(UserRequest userRequest) {
+
+        User user = User.builder().
+                name(userRequest.getName()).
+                email(userRequest.getEmail()).
+                about(userRequest.getAbout()).build();
+
+
+
+        return userREpository.save(user);
     }
 
     @Override

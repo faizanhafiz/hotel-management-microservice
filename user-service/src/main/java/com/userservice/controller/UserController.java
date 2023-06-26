@@ -1,6 +1,7 @@
 package com.userservice.controller;
 
 
+import com.userservice.dto.ResponseApi.UserRequest;
 import com.userservice.entities.User;
 import com.userservice.exceptions.UserNotFoundException;
 import com.userservice.services.UserService;
@@ -21,7 +22,7 @@ public class UserController {
 
 
     @PostMapping("/addUser")
-    public ResponseEntity<User> createUser(@RequestBody  User user)
+    public ResponseEntity<User> createUser(@RequestBody UserRequest user)
     {
 
         User userResponse  = userService.saveUser(user);
