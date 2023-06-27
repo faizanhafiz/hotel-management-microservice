@@ -1,0 +1,19 @@
+
+server:
+  port: 5761
+
+eureka:
+  instance:
+    appname: Eureka-server
+
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+
+
+
+
+
+
+
