@@ -22,4 +22,13 @@ spring:
 
     show-sql: true
 
+eureka:
+  instance:
+    hostname: Hotel-Server
+
+  client:
+    service-url:
+      defaultZone: http://localhost:5761/eureka/
+
+
 
