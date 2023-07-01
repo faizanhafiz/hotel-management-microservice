@@ -1,6 +1,7 @@
 package com.userservice.services.serviceImp;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
 import com.userservice.dto.Hotel;
 import com.userservice.dto.Rating;
 import com.userservice.dto.UserRequest;
@@ -8,98 +9,98 @@ import com.userservice.entities.User;
 import com.userservice.exceptions.UserNotFoundException;
 import com.userservice.repositories.UserREpository;
 import com.userservice.services.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.ILoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.ArrayList;
+import javax.annotation.PostConstruct;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-@Slf4j
 @Service
 public class ServiceImp implements UserService {
 
-    Logger logger = LoggerFactory.getLogger(ServiceImp.class);
+
+    RestTemplateBuilder restTemplateBuilder;
+    private final Logger logger = LoggerFactory.getLogger(ServiceImp.class);
+
+
+    private final UserREpository userREpository;
+    private   RestTemplate  restTemplate;
+
+
+
+    private EurekaClient eurekaClient;
     @Autowired
-    private UserREpository  userREpository;
+    public ServiceImp(UserREpository userREpository, EurekaClient eurekaClient ,RestTemplateBuilder restTemplateBuilder) {
+        this.userREpository = userREpository;
+    this.restTemplate =restTemplateBuilder.build();
+        this.eurekaClient =eurekaClient;
+
+    }
+//    @PostConstruct
+//    public void initializeRestTemplate() {
+//        this.restTemplate = restTemplateBuilder.build();
+//    }
+
     @Override
     public User saveUser(UserRequest userRequest) {
-
-        User user = User.builder().
-                name(userRequest.getName()).
-                email(userRequest.getEmail()).
-                about(userRequest.getAbout()).build();
-
-
-
+        User user = User.builder()
+                .name(userRequest.getName())
+                .email(userRequest.getEmail())
+                .about(userRequest.getAbout())
+                .build();
         return userREpository.save(user);
     }
 
     @Override
     public List<User> getAllUser() {
+        List<User> users = userREpository.findAll();
 
-         List<User> user  =  userREpository.findAll();
-         RestTemplate  restTemplate  = new RestTemplate();
-         user.stream().map(data->
+        return users.stream().map(user -> {
+            logger.info("rating url  ======= >"+getRatingUrl()+"rating/user/"+user.getUserId());
+            Rating[] ratings = restTemplate.getForObject(getRatingUrl()+"rating/user/"+user.getUserId(), Rating[].class);
 
-                 {
+           List<Rating> ratingList = Arrays.asList(ratings);
 
+            ratingList.forEach(rating -> {
+                Hotel hotel = restTemplate.getForObject(getHotelUrl()+"/hotel/getHotelByHotelId/"+rating.getHotelId(), Hotel.class);
+                rating.setHotel(hotel);
+            });
 
+            user.setRatings(ratingList);
+            return user;
+        }).collect(Collectors.toList());
+    }
 
-                     Rating[]  ratings=  restTemplate.getForObject("http://localhost:8083/rating/user/"+data.getUserId() ,  Rating[].class);
-
-                     List<Rating> rating  = Arrays.stream(ratings).toList();
-
-
-                     System.out.println("User data ==>"+ data.getUserId());
-                     System.out.println("Rating data ==>"+ rating);
-
-                     rating.stream().map(data2->{
-
-                         logger.info("hotel id ",data2.getHotelId());
-
-
-                         Hotel hotel = restTemplate.getForObject("http://localhost:8082/hotel/getHotelByHotelId/1", Hotel.class);
-                         logger.info("hotel data type",hotel.getClass());
-                         logger.info("hotel data ===>  ",hotel);
-                         data2.setHotel(hotel);
-                         return data2;
-                     }).collect(Collectors.toList());;
-
-                     data.setRatings(rating);
+    private String getRatingUrl() {
+        InstanceInfo nextServerFromEureka = eurekaClient.getNextServerFromEureka("RATING-SERVER", false);
+        return  nextServerFromEureka.getHomePageUrl();
 
 
+    }
 
+    private String getHotelUrl() {
+        InstanceInfo nextServerFromEureka = eurekaClient.getNextServerFromEureka("HOTEL-SERVER", false);
+        return  nextServerFromEureka.getHomePageUrl();
 
-                     return data;
-
-
-
-                 }
-
-                 ).collect(Collectors.toList());
-
-return  user;
 
     }
 
     @Override
     public User getUser(int id) throws UserNotFoundException {
-        return  userREpository.findById(id).orElseThrow(()-> new UserNotFoundException("User Not found having id "+ id));
+        return userREpository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("User not found with id: " + id));
     }
 
 
+
+
 }
-
-
-
-
