@@ -24,5 +24,7 @@ public interface HotelService {
 
 
 
+    public HotelResponse getHotelByHotelId(@PathVariable int id) throws HotelNotFoundException;
+
 
 }

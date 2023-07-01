@@ -39,11 +39,21 @@ public class HotelController {
     }
 
 
+
     @GetMapping("/hotels")
     public ResponseEntity<List<HotelResponse>> getAllHotels()
     {
         return ResponseEntity.ok(hotelService.getAllHotel());
     }
+
+
+    @GetMapping("/getHotelByHotelId/{id}")
+    public ResponseEntity<HotelResponse> getHotelByHotelId(@PathVariable int id) throws HotelNotFoundException {
+        return ResponseEntity.ok(hotelService.getHotelByHotelId(id));
+    }
+
+
+
 
 
 

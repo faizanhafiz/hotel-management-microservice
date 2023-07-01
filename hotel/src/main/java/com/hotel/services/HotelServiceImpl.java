@@ -63,6 +63,25 @@ public class HotelServiceImpl implements  HotelService{
                .build();
     }
 
+    @Override
+    public HotelResponse getHotelByHotelId(int id) throws HotelNotFoundException {
+
+        Hotel hotel = hotelRepository.findById(id).orElseThrow(()-> new HotelNotFoundException("Hotel not found"));
+
+         return HotelResponse.builder()
+                 .id(hotel.getId())
+                 .about(hotel.getAbout())
+                 .location(hotel.getLocation())
+                 .name(hotel.getName())
+                 .build();
+
+
+
+
+
+
+    }
+
     //get
 
 

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RatingServiceImpl implements  RatingService{
@@ -21,7 +22,10 @@ public class RatingServiceImpl implements  RatingService{
     @Override
     public ResponseEntity<Rating>  createRating(RatingRequest ratingRequest) {
 
+
+        String  id  = UUID.randomUUID().toString();
         Rating rating = Rating.builder()
+                .id(id)
                 .userId(ratingRequest.getUserId())
                 .hotelId(ratingRequest.getHotelId())
                 .feedback(ratingRequest.getFeedback())

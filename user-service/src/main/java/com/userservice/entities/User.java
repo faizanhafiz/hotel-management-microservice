@@ -1,7 +1,8 @@
 package com.userservice.entities;
 
 
-import com.userservice.entities.Rating.Rating;
+import com.userservice.dto.Hotel;
+import com.userservice.dto.Rating;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,6 +41,12 @@ public class User {
 
     @Transient
     List<Rating> ratings  = new ArrayList<>();
+
+
+
+
+
+
 
 
 

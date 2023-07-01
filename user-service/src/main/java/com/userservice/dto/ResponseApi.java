@@ -1,4 +1,4 @@
-package com.userservice.dto.ResponseApi;
+package com.userservice.dto;
 
 
 import lombok.*;
