@@ -7,7 +7,7 @@ server:
 
 spring:
   application:
-    name: hotel-service
+    name: hotel-Server
   datasource:
     url: jdbc:mysql://localhost:3306/hoteldb
     username: root
@@ -23,12 +23,14 @@ spring:
     show-sql: true
 
 eureka:
-  instance:
-    hostname: Hotel-Server
+
 
   client:
     service-url:
       defaultZone: http://localhost:5761/eureka/
+
+    register-with-eureka: true
+    fetch-registry: true
 
 
 
