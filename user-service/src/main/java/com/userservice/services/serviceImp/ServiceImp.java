@@ -7,6 +7,8 @@ import com.userservice.dto.Rating;
 import com.userservice.dto.UserRequest;
 import com.userservice.entities.User;
 import com.userservice.exceptions.UserNotFoundException;
+import com.userservice.feign.HotelFeignService;
+import com.userservice.feign.RatingFeignService;
 import com.userservice.repositories.UserREpository;
 import com.userservice.services.UserService;
 import org.slf4j.Logger;
@@ -30,6 +32,12 @@ public class ServiceImp implements UserService {
 
     RestTemplateBuilder restTemplateBuilder;
     private final Logger logger = LoggerFactory.getLogger(ServiceImp.class);
+
+    @Autowired
+    private HotelFeignService hotelFeignService;
+
+    @Autowired
+    private RatingFeignService ratingFeignService;
 
 
     private final UserREpository userREpository;
@@ -65,13 +73,13 @@ public class ServiceImp implements UserService {
         List<User> users = userREpository.findAll();
 
         return users.stream().map(user -> {
-            logger.info("rating url  ======= >"+getRatingUrl()+"rating/user/"+user.getUserId());
-            Rating[] ratings = restTemplate.getForObject(getRatingUrl()+"rating/user/"+user.getUserId(), Rating[].class);
+
+            Rating[] ratings = ratingFeignService.getAllRatingByUserId(user.getUserId());
 
            List<Rating> ratingList = Arrays.asList(ratings);
 
             ratingList.forEach(rating -> {
-                Hotel hotel = restTemplate.getForObject(getHotelUrl()+"/hotel/getHotelByHotelId/"+rating.getHotelId(), Hotel.class);
+                Hotel hotel =  hotelFeignService.getHotelByUserId(rating.getHotelId());
                 rating.setHotel(hotel);
             });
 
