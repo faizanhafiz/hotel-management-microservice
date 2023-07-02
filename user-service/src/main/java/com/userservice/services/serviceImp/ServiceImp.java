@@ -102,11 +102,18 @@ public class ServiceImp implements UserService {
 
     }
 
+
     @Override
     public User getUser(int id) throws UserNotFoundException {
         return userREpository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("User not found with id: " + id));
     }
+
+
+
+
+
+
 
 
 
