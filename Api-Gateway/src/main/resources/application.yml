@@ -15,6 +15,16 @@ spring:
           predicates:
             - Path=/user/**
 
+        -  id : HOTEL-SERVER
+           uri: lb://HOTEL-SERVER
+           predicates:
+             - Path=/hotel/**
+
+        - id: RATING-SERVER
+          uri: lb://RATING-SERVER
+          predicates:
+            - Path=/rating/**
+
 
 eureka:
   client:
