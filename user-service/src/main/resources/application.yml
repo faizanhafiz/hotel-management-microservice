@@ -21,17 +21,10 @@ spring:
     generate-ddl: true
 
     show-sql: true
+  config:
+    import:
+      - configserver:http://localhost:8086
 
 
-eureka:
-
-
-  client:
-    fetch-registry: true
-
-    register-with-eureka: true
-
-    service-url:
-      defaultZone :  http://localhost:5761/eureka/
 
 

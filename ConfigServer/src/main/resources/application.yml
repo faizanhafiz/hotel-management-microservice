@@ -1,0 +1,21 @@
+server:
+  port: 8086
+spring:
+  application:
+    name: CONFIG-SERVER
+
+
+  cloud:
+    config:
+      server:
+        git:
+          uri:  https://github.com/faizanhafiz/config-repo-for-hotel-project/
+
+
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone : http://localhost:5761/eureka/

@@ -9,12 +9,7 @@ spring:
       database: ratingDb
   application:
     name: rating-Server
+  config:
+    import:
+      - configserver:http://localhost:8086
 
-eureka:
-
-
-  client:
-    service-url:
-      defaultZone: http://localhost:5761/eureka/
-    fetch-registry: true
-    register-with-eureka: true
