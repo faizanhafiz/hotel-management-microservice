@@ -5,16 +5,22 @@ import com.userservice.dto.UserRequest;
 import com.userservice.entities.User;
 import com.userservice.exceptions.UserNotFoundException;
 import com.userservice.services.UserService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 @RequestMapping(path = "/user")
 public class UserController {
-
+     Logger logger  = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -35,8 +41,11 @@ public class UserController {
     // getAll User
 
     @GetMapping("/getusers")
+    @CircuitBreaker(name = "GetAllUserCircuitBraker" ,fallbackMethod="getAllUserGallBack")
     public ResponseEntity<List<User>> getAllUser()
     {
+
+
         List<User>  allUsers = userService.getAllUser();
 
         return ResponseEntity.ok(allUsers);
@@ -48,6 +57,16 @@ public class UserController {
     public ResponseEntity<User>  getUser(@PathVariable  int id) throws UserNotFoundException {
         User user = userService.getUser(id);
         return ResponseEntity.ok(user);
+    }
+
+    private  ResponseEntity<List<User>>   getAllUserGallBack(Exception e)
+    {
+
+        logger.info(("Server id downl "+e.getMessage()));
+    List<User> user  = new ArrayList<>();
+    user.add(new User());
+        return new  ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
 
 
