@@ -1,6 +1,6 @@
 
 server:
-  port: 5761
+  port: 5762
 
 eureka:
   instance:
