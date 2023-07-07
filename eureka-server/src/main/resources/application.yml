@@ -1,6 +1,6 @@
 
 server:
-  port: 5762
+  port: 8761
 
 eureka:
   instance:
@@ -9,6 +9,7 @@ eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
 
 
 

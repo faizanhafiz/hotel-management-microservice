@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping("/getusers")
     @CircuitBreaker(name = "GetAllUserCircuitBraker" ,fallbackMethod="getAllUserGallBack")
-    public ResponseEntity<List<User>> getAllUser()
+    public ResponseEntity<?> getAllUser()
     {
 
 
@@ -59,14 +59,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    private  ResponseEntity<List<User>>   getAllUserGallBack(Exception e)
-    {
 
-        logger.info(("Server id downl "+e.getMessage()));
-    List<User> user  = new ArrayList<>();
-    user.add(new User());
-        return new  ResponseEntity<>(user, HttpStatus.INTERNAL_SERVER_ERROR);
 
+    private  ResponseEntity<?>  getAllUserGallBack(Exception e){
+        return new  ResponseEntity("Some sever might be down",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 

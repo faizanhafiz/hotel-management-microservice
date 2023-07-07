@@ -14,4 +14,6 @@ public interface HotelFeignService {
     Hotel getHotelByUserId(@PathVariable int hotelId);
 
 
+
+
 }

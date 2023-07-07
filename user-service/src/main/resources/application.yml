@@ -25,20 +25,6 @@ spring:
     import:
       - configserver:http://localhost:8086
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include:
-          - "health"
-  endpoint:
-    health:
-      show-details: always
-
-
-
-
-
 
 
 
