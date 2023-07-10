@@ -26,5 +26,26 @@ spring:
       - configserver:http://localhost:8086
 
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      GetAllUserCircuitBraker:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 2
+        registerHealthIndicator: true
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        maxWaitDurationInHalfOpenState: 2
+        minimumNumberOfCalls: 3
+
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+      enabled: true
+
+
+
+
 
 
